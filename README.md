@@ -99,6 +99,7 @@ Bevor die einzelnen Sequenzen aligned werden können, muss ein Index vom Referen
   --genomeFastaFiles referenceGenome/GRCh38.p13.genome.fa \ #Pfad zum Referenzgenonm
   --sjdbGTFfile referenceGenome/gencode.v38.chr_patch_hapl_scaff.basic.annotation.gtf \ #Pfad zur Annotation
   --runThreadN 16
+  ```
   
   Anschließend können die Sequenzen `aligned` werden:
 
