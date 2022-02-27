@@ -97,5 +97,43 @@ Bevor die einzelnen Sequenzen aligned werden können, muss ein Index vom Referen
   --runMode genomeGenerate \ #Argument zur Erstellung des Indexes
   --genomeDir genome/STAR/ \ #Ordner in den der Index gespeichert wird
   --genomeFastaFiles referenceGenome/GRCh38.p13.genome.fa \ #Pfad zum Referenzgenonm
-  --sjdbGTFfile referenceGenome/gencode.v38.chr_patch_hapl_scaff.basic.annotation.gtf \ #Pfas zur Annotation
+  --sjdbGTFfile referenceGenome/gencode.v38.chr_patch_hapl_scaff.basic.annotation.gtf \ #Pfad zur Annotation
   --runThreadN 16
+  
+  Anschließend können die Sequenzen `aligned` werden:
+
+  ```bash
+  STAR \
+  --genomeDir genome/STAR/ \ #Ordner mit indiziertem Genom
+  --readFilesIn /path/to/fastq-Datei \
+  --outFileNamePrefix /path/to/result-directory \
+  --outSAMattributes All \ #Standard
+  --outSAMunmapped Within \ #Wie mit nicht gemappten Reads verfahren
+  --runThreadN 16 \ #Anzahl der zu verwendenen Threads
+  --outSAMtype BAM SortedByCoordinate \ #In welchem Dateityp die Ergebnisse zu speichern sind und wie sie zu sortieren sind
+  --readFilesCommand zcat #Welches Programm für verwendet wird um stdout zu generieren
+  ```
+
+Damit die Daten in Tools wie den `Integrative Genomic Viewer` visualisiert werden können, müssen die prozessierten Daten indiziert werden. Im Falle des `IGV` ist es notwendig, dass sich der Index und die `.bam`-Datei im selben Ordner befindet.
+
+  ```bash
+  samtools index /path/to/bam_file
+  ```
+
+Um alle `.bam`-Files automatisch zu indizieren, wurde folgender Befehl verwendet:
+
+  ```bash
+  #Der Pfad darf dabei nur zur höheren Ordner-Ebene führen
+  find /path/to/bam_files -mindepth 1 -type d -exec bash -c "cd '{}' && samtools index Aligned.sortedByCoord.out.bam" \; 
+  ```
+
+### Qualitätskontrolle *Mapping*
+
+Die Qualität und die Effizienz des *Mappings* wird ebenfalls mittels `samtools` analysiert. Hierzu werden die flagstats erstellt, die die Anzahl erfolgreicher Alignments aufzählen.
+
+  ```bash
+  samtools flagstat /path/to/bam_file > flagstat.txt
+  ```
+
+Die so erstellten `.txt`-Dateien werden mit Hilfe von **R** ausgewertet und visualisiert.
+
