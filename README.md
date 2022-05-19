@@ -1,10 +1,14 @@
-
+---
+title: "RNA-Seq Whole Exon Analysis workflow"
+author: "Dr. Christian Vogeley"
+date: "2022/02/25"
+---
 
 # Project: Extrinsic and intrinsic skin aging -Whole exon sequencing
 
 Probanden wurden in drei Altersklassen (jung, mittel, alt) eingeteilt und biopsiert. Dabei wurden Proben von der Schulter (extrinsic) und dem Gesäß (intrinsic) entnommen. Die RNA wurde isoliert und in cDNA umgeschrieben. *Library preparation* und Sequenzierung mittels Illumina&reg; wurde extern durchgeführt. Die Indizes wurden in den bereitgestellten Proben bereits entfernt.
 
-Die `URLs` wurden in der Textdatei `raw-data.txt` gespeichert und `wget` überführt.
+Der `ÙRLs` wurden in der Textdatei `raw-data.txt` gespeichert und `wget` überführt.
 
   ```sh
   wget -P /path/to/Raw/ -i /path/to/txt-file
@@ -97,11 +101,11 @@ Bevor die einzelnen Sequenzen aligned werden können, muss ein Index vom Referen
   --runMode genomeGenerate \ #Argument zur Erstellung des Indexes
   --genomeDir genome/STAR/ \ #Ordner in den der Index gespeichert wird
   --genomeFastaFiles referenceGenome/GRCh38.p13.genome.fa \ #Pfad zum Referenzgenonm
-  --sjdbGTFfile referenceGenome/gencode.v38.chr_patch_hapl_scaff.basic.annotation.gtf \ #Pfad zur Annotation
-  --runThreadN 16
+  --sjdbGTFfile referenceGenome/gencode.v38.chr_patch_hapl_scaff.basic.annotation.gtf \ #Pfas zur Annotation
+  --runThreadN 16 #Anzahl der zu verwendenen Threads
   ```
-  
-  Anschließend können die Sequenzen `aligned` werden:
+
+Anschließend können die Sequenzen `aligned` werden:
 
   ```bash
   STAR \
@@ -112,7 +116,7 @@ Bevor die einzelnen Sequenzen aligned werden können, muss ein Index vom Referen
   --outSAMunmapped Within \ #Wie mit nicht gemappten Reads verfahren
   --runThreadN 16 \ #Anzahl der zu verwendenen Threads
   --outSAMtype BAM SortedByCoordinate \ #In welchem Dateityp die Ergebnisse zu speichern sind und wie sie zu sortieren sind
-  --readFilesCommand zcat #Welches Programm für verwendet wird um stdout zu generieren
+  --readFilesCommand zcat #Welches Programm für verwendet wird um stdout zu generieren 
   ```
 
 Damit die Daten in Tools wie den `Integrative Genomic Viewer` visualisiert werden können, müssen die prozessierten Daten indiziert werden. Im Falle des `IGV` ist es notwendig, dass sich der Index und die `.bam`-Datei im selben Ordner befindet.
@@ -125,7 +129,7 @@ Um alle `.bam`-Files automatisch zu indizieren, wurde folgender Befehl verwendet
 
   ```bash
   #Der Pfad darf dabei nur zur höheren Ordner-Ebene führen
-  find /path/to/bam_files -mindepth 1 -type d -exec bash -c "cd '{}' && samtools index Aligned.sortedByCoord.out.bam" \; 
+  find /path/to/bam_files -mindepth 1 -type d -exec bash -c "cd '{}' && samtools index Aligned.sortedByCoord.out.bam" \;
   ```
 
 ### Qualitätskontrolle *Mapping*
@@ -137,4 +141,3 @@ Die Qualität und die Effizienz des *Mappings* wird ebenfalls mittels `samtools`
   ```
 
 Die so erstellten `.txt`-Dateien werden mit Hilfe von **R** ausgewertet und visualisiert.
-
