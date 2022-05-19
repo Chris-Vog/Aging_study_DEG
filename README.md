@@ -1,7 +1,7 @@
 ---
 title: "RNA-Seq Whole Exon Analysis workflow"
 author: "Dr. Christian Vogeley"
-date: "2022/02/25"
+date: "2022/05/19"
 ---
 
 # Project: Extrinsic and intrinsic skin aging -Whole exon sequencing
